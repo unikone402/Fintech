@@ -12,7 +12,6 @@ import {
   Loader2,
   Search,
   Menu,
-  MoreHorizontal,
   Wifi,
   Clock,
   MessageCircle,
@@ -25,8 +24,6 @@ import {
   BrainCircuit,
   Image as ImageIcon,
   Upload,
-  Home,
-  Settings,
   Sun,
   Moon,
   RefreshCw,
@@ -37,30 +34,20 @@ import { getAuth, signInWithCustomToken, signInAnonymously, signOut, onAuthState
 
 /**
  * FIREBASE CONFIGURATION & INIT
+ * ✅ Corrected Syntax
  */
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+const firebaseConfig = {
+  apiKey: "AIzaSyATb8nlBb1BChZym6UkdelQHV2Nz2uiBMM",
+  authDomain: "fintech-assignment.firebaseapp.com",
+  projectId: "fintech-assignment",
+  storageBucket: "fintech-assignment.appspot.com",
+  messagingSenderId: "904917524026", 
+  appId: "1:904917524026:web:2a8385278453488827d091"
+};
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyATb8nlBb1BChZym6UkdelQHV2Nz2uiBMM",
-    authDomain: "fintech-assignment.firebaseapp.com",
-    projectId: "fintech-assignment",
-    storageBucket: "fintech-assignment.firebasestorage.app",
-    messagingSenderId: "183633818468",
-    appId: "1:183633818468:web:4aeb1ae7ea023ffd2b8071",
-    measurementId: "G-63E07CV9KG"
-  };
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
 /**
  * OP BANK API SANDBOX CONFIGURATION
  */
@@ -73,7 +60,6 @@ const OP_CONFIG = {
 
 /**
  * MOCK SERVER STATE
- * Stores data outside the component so it persists during "Refreshes"
  */
 let serverBalance = 2450.75;
 let serverTransactions = [
@@ -157,6 +143,7 @@ const fakeBankAPI = {
  * GEMINI API UTILITY
  */
 const callGeminiAPI = async (userQuery, contextData = null) => {
+  // Use empty string or environment variable here for security in production
   const apiKey = ""; 
   
   let systemContext = "";
@@ -230,7 +217,7 @@ export default function BankingApp() {
   // Menu State with Timed Interactions
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [canCloseMenu, setCanCloseMenu] = useState(false);
-  const [isClosing, setIsClosing] = useState(false); // New state for closing animation
+  const [isClosing, setIsClosing] = useState(false);
   
   const [isRefreshing, setIsRefreshing] = useState(false);
   
@@ -259,29 +246,26 @@ export default function BankingApp() {
 
   // --- TAB NAVIGATION LOGIC ---
   const handleTabChange = (newTab) => {
-    // Define the logical order of tabs to determine slide direction
     const tabOrder = ['wallet', 'transfer', 'topup', 'history', 'account'];
     const prevIndex = tabOrder.indexOf(activeTab);
     const newIndex = tabOrder.indexOf(newTab);
 
     if (newIndex > prevIndex) {
-      setAnimDirection('right'); // Slide in from right (moving forward)
+      setAnimDirection('right');
     } else {
-      setAnimDirection('left'); // Slide in from left (moving backward)
+      setAnimDirection('left');
     }
     setActiveTab(newTab);
-    // When navigating via menu, trigger the smooth close
     handleCloseMenu();
   };
 
   // --- MENU CLOSE ANIMATION LOGIC ---
   const handleCloseMenu = () => {
     setIsClosing(true);
-    // Wait for animation to finish before unmounting
     setTimeout(() => {
       setIsMenuOpen(false);
       setIsClosing(false);
-    }, 300); // 300ms matches the CSS animation duration
+    }, 300);
   };
 
   const refreshData = async () => {
@@ -331,7 +315,6 @@ export default function BankingApp() {
   }, []);
 
   // --- MENU TIMEOUT LOGIC ---
-  // When menu opens, wait 2 seconds before allowing hover-close
   useEffect(() => {
     let timer;
     if (isMenuOpen) {
