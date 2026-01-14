@@ -34,7 +34,7 @@ import { getAuth, signInWithCustomToken, signInAnonymously, signOut, onAuthState
 
 /**
  * FIREBASE CONFIGURATION & INIT
- * ✅ Corrected Syntax
+ * Your keys from the previous log
  */
 const firebaseConfig = {
   apiKey: "AIzaSyATb8nlBb1BChZym6UkdelQHV2Nz2uiBMM",
@@ -143,9 +143,15 @@ const fakeBankAPI = {
  * GEMINI API UTILITY
  */
 const callGeminiAPI = async (userQuery, contextData = null) => {
-  // Use empty string or environment variable here for security in production
-  const apiKey = ""; 
+  // ---------------------------------------------------------
+  // 🔑 PASTE YOUR GOOGLE GEMINI API KEY BELOW
+  // ---------------------------------------------------------
+  const apiKey = "AIzaSyCjI4wPUhwiAN07nHIkC5qSFl9V9Fbdggw"; 
   
+  if (!apiKey) {
+      return "Error: Gemini API Key is missing. Please add it to the code.";
+  }
+
   let systemContext = "";
   if (contextData) {
     systemContext = `
