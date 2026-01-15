@@ -34,7 +34,6 @@ import { getAuth, signInWithCustomToken, signInAnonymously, signOut, onAuthState
 
 /**
  * FIREBASE CONFIGURATION & INIT
- * Your keys from the previous log
  */
 const firebaseConfig = {
   apiKey: "AIzaSyATb8nlBb1BChZym6UkdelQHV2Nz2uiBMM",
@@ -144,12 +143,29 @@ const fakeBankAPI = {
  */
 const callGeminiAPI = async (userQuery, contextData = null) => {
   // ---------------------------------------------------------
-  // 🔑 PASTE YOUR GOOGLE GEMINI API KEY BELOW
+  // 🔑 KEY HIDDEN: Now using process.env for broader compatibility
+  // In Vite/Vercel, ensure you set 'VITE_GEMINI_API_KEY' in your environment variables.
   // ---------------------------------------------------------
-  const apiKey = "AIzaSyCjI4wPUhwiAN07nHIkC5qSFl9V9Fbdggw"; 
+  // Fallback to import.meta.env if process.env is not defined (standard Vite behavior)
+  let apiKey = "";
+  try {
+    // Try standard Vite access first
+    if (typeof import.meta !== 'undefined' && import.meta.env) {
+      apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    }
+  } catch (e) {
+    // Ignore error if import.meta is not supported
+  }
+
+  // Fallback to process.env (Standard Node/Webpack/Compatible)
+  if (!apiKey && typeof process !== 'undefined' && process.env) {
+    apiKey = process.env.VITE_GEMINI_API_KEY;
+  }
+  
+  // NOTE: If both fail locally, ensure your .env file is set up and your build tool loads it.
   
   if (!apiKey) {
-      return "Error: Gemini API Key is missing. Please add it to the code.";
+      return "Configuration Error: VITE_GEMINI_API_KEY is missing. Please add it to your .env file locally or Vercel Environment Variables.";
   }
 
   let systemContext = "";
